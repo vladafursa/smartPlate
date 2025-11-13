@@ -1,7 +1,7 @@
 # SmartPlate – Personalized Number Plate Marketplace  
 ### Modular Monolith Version (Initial Release)
 
-SmartPlate is a **clean, modular ASP.NET Core 8 Web API** that simulates the buying and selling of personalized number plates.  
+SmartPlate is a **clean, modular ASP.NET Core 9 Web API** that simulates the buying and selling of personalized number plates.  
 This version is intentionally built as a **modular monolith** to allow fast development, easy maintenance, and effortless future scaling into microservices.
 
 ---
@@ -24,10 +24,10 @@ This version is intentionally built as a **modular monolith** to allow fast deve
 
 ###  Architecture & Quality
 - Modular structure (Users, Plates, Orders modules)  
-- EF Core 8 + SQL Server (SQLite fallback for development)  
+- EF Core 9 + SQL Server (SQLite fallback for development)  
 - FluentValidation for request validation  
 - Serilog for structured logging  
-- Swagger/OpenAPI auto-generated docs  
+- Swagger
 
 ---
 
@@ -35,7 +35,7 @@ This version is intentionally built as a **modular monolith** to allow fast deve
 
 | Area        | Technology             |
 |-------------|------------------------|
-| Backend     | C#, ASP.NET Core 8     |
+| Backend     | C#, ASP.NET Core 9     |
 | Database    | SQL Server / SQLite    |
 | ORM         | Entity Framework Core  |
 | Auth        | JWT Authentication     |
@@ -49,6 +49,8 @@ This version is intentionally built as a **modular monolith** to allow fast deve
 ##  Architecture Overview
 
 SmartPlate follows a **modular folder-by-feature structure** inside one monolithic Web API project.
+
+```text
 SmartPlate/
  ├── Controllers/
  │    ├── UserController.cs
@@ -68,7 +70,7 @@ SmartPlate/
  │    ├── Order.cs
  ├── DTOs/
  └── Tests/
-
+```
 
 ## Installation & Running
 
@@ -76,4 +78,5 @@ SmartPlate/
 ```bash
 git clone https://github.com/vladafursa/SmartPlate.git
 cd SmartPlate
+
 
