@@ -1,0 +1,6 @@
+@SmartPlate_HostAddress = http://localhost:5122
+
+GET {{SmartPlate_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
