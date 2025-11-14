@@ -1,10 +1,12 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace SmartPlate.DTOs.User
 {
     public record class UserResponseDto
     {
         public Guid Id { get; init; }
-        public string UserName { get; init; } = null!;
-        public string Email { get; init; } = null!;
-        public string Role { get; init; } = null!;
+        [Required] public string UserName { get; init; }
+        [Required] public string Email { get; init; }
+        [Required] public string Role { get; init; }
     }
 }

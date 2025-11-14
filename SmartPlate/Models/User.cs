@@ -4,12 +4,13 @@ namespace SmartPlate.Models;
 public class User
 {
     //private constructor to prevent direct instantiation with "new"
-    private User(Guid id, string userName, string passwordHash, string email)
+    private User(Guid id, string userName, string passwordHash, string email, string role)
     {
         Id = id;
         UserName = userName;
         PasswordHash = passwordHash;
         Email = email;
+        Role = role;
     }
 
     // // Unique identifier
@@ -22,9 +23,12 @@ public class User
 
     public string Email { get; private set; }
 
+    // Role property with default user role
+    public string Role { get; private set; } = "User";
+
     // method for creating a new user instance.
-    public static User Create(Guid id, string userName, string passwordHash, string email)
+    public static User Create(Guid id, string userName, string passwordHash, string email, string role = "User")
     {
-        return new User(id, userName, passwordHash, email);
+        return new User(id, userName, passwordHash, email, role);
     }
 }
