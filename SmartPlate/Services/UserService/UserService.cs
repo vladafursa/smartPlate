@@ -18,14 +18,17 @@ namespace SmartPlate.Services.UserService
         private readonly UserDbContext _context;
         private readonly JwtSettings _jwt;
 
+        // Constructor with dependency injection
         public UserService(UserDbContext context, IOptions<JwtSettings> jwtOptions)
         {
             _context = context;
-            _jwt = jwtOptions.Value;
+            _jwt = jwtOptions.Value; // Get JwtSettings values from IOptions
         }
 
+        // User registration
         public async Task<UserResponseDto?> RegisterAsync(UserRegisterDto dto)
         {
+            // Check if a user with the same username or email already exists
             if (await _context.Users.AnyAsync(u => u.UserName == dto.Name || u.Email == dto.Email))
                 return null;
 
@@ -33,9 +36,10 @@ namespace SmartPlate.Services.UserService
 
             var user = User.Create(Guid.NewGuid(), dto.Name, hashedPassword, dto.Email, dto.Role);
 
+            // Add the user to the context and save changes to the database
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
-
+            // Return a DTO with user info (without password)
             return new UserResponseDto
             {
                 Id = user.Id,
@@ -45,16 +49,20 @@ namespace SmartPlate.Services.UserService
             };
         }
 
+        // Find the user by username
         public async Task<(UserResponseDto? user, string? token)> LoginAsync(UserLoginDto dto)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == dto.Name);
+            // Find the user by email
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
             if (user == null) return (null, null);
 
+            // Verify the password
             bool isValidPassword = Verify(dto.Password, user.PasswordHash);
             if (!isValidPassword) return (null, null);
 
             var token = GenerateJwtToken(user);
 
+            // Map User to UserResponseDto
             var userDto = new UserResponseDto
             {
                 Id = user.Id,
@@ -66,18 +74,21 @@ namespace SmartPlate.Services.UserService
             return (userDto, token);
         }
 
-
+        // Hash a plain password using BCrypt
         public string HashPassword(string password)
         {
             return BCrypt.Net.BCrypt.HashPassword(password);
         }
 
+        // Verify a plain password against a hashed password
         public bool Verify(string password, string hashedPassword)
         {
             return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
         }
+
         private string GenerateJwtToken(User user)
         {
+            // Define claims (user info stored in the token)
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
@@ -86,17 +97,20 @@ namespace SmartPlate.Services.UserService
                 new Claim(ClaimTypes.Role, user.Role)
             };
 
+            // Create a symmetric security key from the secret
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwt.Key));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
+            // Create the JWT token
             var token = new JwtSecurityToken(
                 issuer: _jwt.Issuer,
                 audience: _jwt.Audience,
                 claims: claims,
-                expires: DateTime.UtcNow.AddHours(2),
+                expires: DateTime.UtcNow.AddHours(2),// Token valid for 2 hours
                 signingCredentials: creds
             );
 
+            // Return the token as a string
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
