@@ -1,11 +1,11 @@
 using Xunit;
-using SmartPlate.Services.UserService;
-using SmartPlate.DTOs.User;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using SmartPlate.Data;
+using SmartPlate.DTOs.User;
 using SmartPlate.Helpers;
-using Moq;
+using SmartPlate.Services.UserService;
+
 
 namespace SmartPlate.Tests.UserTests
 {
