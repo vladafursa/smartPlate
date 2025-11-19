@@ -18,7 +18,7 @@ public class PlateCreateDto
     [Range(1900, 2025, ErrorMessage = "Year issued must be between 1900 and 2025.")]
     public int? YearIssued { get; set; }
 
-    // Assignment / DVLA rules
+    // DVLA rules
     public bool CanApplyToAnyVehicle { get; set; }
     public bool IsAssigned { get; set; }
     public bool AvailableAsCertificate { get; set; }
@@ -33,8 +33,6 @@ public class PlateCreateDto
     public bool IsAuction { get; set; }
     [Required]
     public PlateSupplyType Supply { get; set; }
-
-    // Ownership/trade state
-    public Guid? CurrentOwnerId { get; set; }
+    //status
     public PlateStatus Status { get; set; } = PlateStatus.Listed;
 }
