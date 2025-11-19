@@ -183,5 +183,32 @@ namespace SmartPlate.Tests.UserTests
             Assert.Equal("Invalid credentials.", unauthorizedResult.Value);
         }
 
+        //logout tests
+        [Fact]
+        public void Logout_ShouldDeleteJwtCookie_AndReturnOk()
+        {
+            // Arrange
+            var httpContext = new DefaultHttpContext();
+            var controller = new UserController(_userServiceMock.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = httpContext
+                }
+            };
+
+            // Act
+            var result = controller.Logout();
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var responseMessage = okResult.Value as dynamic;
+            Assert.Equal("Logged out successfully.", (string)responseMessage.message);
+
+            // Assert
+            var setCookieHeader = httpContext.Response.Headers["Set-Cookie"].ToString();
+            Assert.Contains("jwt=", setCookieHeader);
+            Assert.Contains("expires=", setCookieHeader.ToLower());
+        }
     }
 }
