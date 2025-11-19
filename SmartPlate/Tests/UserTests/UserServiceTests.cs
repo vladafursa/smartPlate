@@ -196,5 +196,21 @@ namespace SmartPlate.Tests.UserTests
             Assert.NotNull(token);
             Assert.StartsWith("ey", token);
         }
+
+        //Hash function test
+        [Fact]
+        public void HashPassword_And_Verify_ShouldWorkTogether()
+        {
+            //Arrange
+            var plain = "mypassword";
+
+            //Act
+            var hashed = _service.HashPassword(plain);
+
+            //Assert
+            Assert.True(_service.Verify(plain, hashed));
+            Assert.False(_service.Verify("wrongpassword", hashed));
+        }
+
     }
 }
