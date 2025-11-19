@@ -8,6 +8,7 @@ public class Plate
     // Core identity
     public string RegistrationNumber { get; set; }
     public PlateType Type { get; set; }
+    public List<PlateCategory> Categories { get; set; } = new();
 
     // Classification
     public string Region { get; set; }
@@ -27,7 +28,7 @@ public class Plate
 
     // Ownership/trade state
     public Guid? CurrentOwnerId { get; set; }
-    public PlateStatus Status { get; set; }
+    public PlateStatus Status { get; set; } = PlateStatus.Listed;
 
     // Tracking / value history
     public DateTime DateListed { get; set; }
