@@ -17,8 +17,6 @@ namespace SmartPlate.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-            // Подхватывает все классы, реализующие IEntityTypeConfiguration<T> в текущей сборке
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
         }
     }

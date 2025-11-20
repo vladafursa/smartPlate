@@ -186,7 +186,6 @@ namespace SmartPlate.Tests.UserTests
             Assert.Equal("Invalid credentials.", unauthorizedResult.Value);
         }
 
-        //logout tests
         [Fact]
         public void Logout_ShouldDeleteJwtCookie_AndReturnOk()
         {
@@ -205,13 +204,17 @@ namespace SmartPlate.Tests.UserTests
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
-            var responseMessage = okResult.Value as dynamic;
-            Assert.Equal("Logged out successfully.", (string)responseMessage.message);
+            Assert.NotNull(okResult.Value);
 
-            // Assert
+            var messageProp = okResult.Value.GetType().GetProperty("message");
+            Assert.NotNull(messageProp);
+            var messageValue = messageProp.GetValue(okResult.Value) as string;
+            Assert.Equal("Logged out successfully.", messageValue);
+
             var setCookieHeader = httpContext.Response.Headers["Set-Cookie"].ToString();
             Assert.Contains("jwt=", setCookieHeader);
             Assert.Contains("expires=", setCookieHeader.ToLower());
         }
+
     }
 }
