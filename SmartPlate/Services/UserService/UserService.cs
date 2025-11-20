@@ -113,5 +113,18 @@ namespace SmartPlate.Services.UserService
             // Return the token as a string
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+        public async Task<List<UserResponseDto>> GetAllUsersAsync()
+        {
+            return await _context.Users
+                .Select(u => new UserResponseDto
+                {
+                    Id = u.Id,
+                    UserName = u.UserName,
+                    Email = u.Email,
+                    Role = u.Role
+                })
+                .ToListAsync();
+        }
     }
 }

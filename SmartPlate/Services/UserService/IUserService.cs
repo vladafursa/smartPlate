@@ -7,6 +7,8 @@ namespace SmartPlate.Services.UserService
     {
         Task<UserResponseDto?> RegisterAsync(UserRegisterDto dto);
         Task<(UserResponseDto? user, string? token)> LoginAsync(UserLoginDto dto);
+        Task<List<UserResponseDto>> GetAllUsersAsync();
+
         string HashPassword(string password);
         bool Verify(string password, string hashedPassword);
     }
