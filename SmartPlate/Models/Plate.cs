@@ -10,7 +10,6 @@ namespace SmartPlate.Models
         private Plate()
         {
             Categories = new List<PlateCategory>();
-            OwnershipHistory = new List<PlateOwnershipRecord>();
         }
 
         // Private constructor to initialise Plate with required properties
@@ -30,9 +29,6 @@ namespace SmartPlate.Models
 
             // Categories are fixed and assigned at creation
             Categories = new List<PlateCategory>(categories);
-
-            // Initialise ownership history
-            OwnershipHistory = new List<PlateOwnershipRecord>();
         }
 
         public Guid Id { get; private set; }
@@ -53,13 +49,6 @@ namespace SmartPlate.Models
         public bool AvailableAsCertificate { get; private set; }
 
         public PlateSupplyType Supply { get; private set; }
-
-        // Ownership history of the plate
-        public ICollection<PlateOwnershipRecord> OwnershipHistory { get; private set; }
-        public void AddOwnershipRecord(PlateOwnershipRecord record)
-        {
-            OwnershipHistory.Add(record);
-        }
 
         // Factory method to create a new Plate instance
         public static Plate Create(

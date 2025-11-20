@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using SmartPlate.Models;
-using SmartPlate.Data.Configurations;
 
 namespace SmartPlate.Data
 {

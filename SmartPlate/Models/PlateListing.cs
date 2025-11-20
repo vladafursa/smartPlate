@@ -9,7 +9,6 @@ namespace SmartPlate.Models
         // Parameterless constructor for EF Core
         private PlateListing()
         {
-            BidHistory = new List<PlateBid>();
         }
 
         // Private constructor 
@@ -26,8 +25,6 @@ namespace SmartPlate.Models
             IsAuction = isAuction;
             Status = PlateListingStatus.Listed;
             DateListed = DateTime.UtcNow;
-
-            BidHistory = new List<PlateBid>();
         }
 
         public Guid Id { get; private set; }
@@ -47,20 +44,11 @@ namespace SmartPlate.Models
         public PlateListingStatus Status { get; private set; }
         public DateTime DateListed { get; private set; }
 
-        // Bid history for this listing
-        public ICollection<PlateBid> BidHistory { get; private set; }
 
         // Factory method to create a new listing
         public static PlateListing Create(Plate plate, User seller, decimal price, bool isAuction, decimal transferFee = 80m)
         {
             return new PlateListing(plate, seller, price, isAuction, transferFee);
-        }
-
-        // Add a bid to the listing
-        public void AddBid(PlateBid bid)
-        {
-            if (bid == null) throw new ArgumentNullException(nameof(bid));
-            BidHistory.Add(bid);
         }
 
         //changes in status
