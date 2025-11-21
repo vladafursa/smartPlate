@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 using SmartPlate.Models.Enums;
-namespace SmartPlate.DTOs.Plate;
 
 namespace SmartPlate.DTOs.Plate
 {
