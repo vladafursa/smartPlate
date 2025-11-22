@@ -77,5 +77,59 @@ namespace SmartPlate.Models
                 categories
             );
         }
+
+        //updating fields
+        public void UpdateRegistrationNumber(string registrationNumber)
+        {
+            if (string.IsNullOrWhiteSpace(registrationNumber))
+                throw new ArgumentException("Registration number cannot be empty.");
+            RegistrationNumber = registrationNumber;
+        }
+
+        public void UpdateRegion(string region)
+        {
+            if (string.IsNullOrWhiteSpace(region))
+                throw new ArgumentException("Region cannot be empty.");
+            Region = region;
+        }
+
+        public void UpdateCategories(List<PlateCategory> categories)
+        {
+            if (categories == null || !categories.Any())
+                throw new ArgumentException("Plate must have at least one category.");
+            Categories = new List<PlateCategory>(categories);
+        }
+
+        public void UpdateType(PlateType type)
+        {
+            Type = type;
+        }
+
+        public void UpdateYearIssued(int? year)
+        {
+            if (year.HasValue && (year < 1900 || year > 2025))
+                throw new ArgumentOutOfRangeException(nameof(year), "Year must be between 1900 and 2025.");
+            YearIssued = year;
+        }
+
+        public void UpdateCanApplyToAnyVehicle(bool canApply)
+        {
+            CanApplyToAnyVehicle = canApply;
+        }
+
+        public void UpdateIsAssigned(bool isAssigned)
+        {
+            IsAssigned = isAssigned;
+        }
+
+        public void UpdateAvailableAsCertificate(bool available)
+        {
+            AvailableAsCertificate = available;
+        }
+
+        public void UpdateSupply(PlateSupplyType supply)
+        {
+            Supply = supply;
+        }
     }
 }
