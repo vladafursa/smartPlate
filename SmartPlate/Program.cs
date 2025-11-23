@@ -12,6 +12,7 @@ using SmartPlate.Services.UserService;
 using SmartPlate.Services.PlateService;
 using SmartPlate.Services.PlateOwnershipService;
 using SmartPlate.Services.PlateListingService;
+using SmartPlate.Services.OrderService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -57,6 +58,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPlateService, PlateService>();
 builder.Services.AddScoped<IPlateOwnershipService, PlateOwnershipService>();
 builder.Services.AddScoped<IPlateListingService, PlateListingService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 // Controllers
 builder.Services.AddControllers().AddJsonOptions(options =>
