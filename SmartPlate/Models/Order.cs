@@ -6,7 +6,7 @@ public class Order
 {
     private Order() { }
 
-    private Order(PlateListing listing, User buyer, decimal finalPrice)
+    private Order(PlateListing listing, User buyer)
     {
         Id = Guid.NewGuid();
         PlateListing = listing;
@@ -18,7 +18,7 @@ public class Order
         SellerId = listing.SellerId;
         Seller = listing.Seller;
 
-        FinalPrice = finalPrice;
+        FinalPrice = listing.Price;
         Status = OrderStatus.Pending;
         CreatedAt = DateTime.UtcNow;
     }
@@ -46,10 +46,9 @@ public class Order
     public DateTime CreatedAt { get; private set; }
 
     // factory method to enforce valid creation
-    public static Order Create(PlateListing listing, User buyer, decimal? finalPrice = null)
+    public static Order Create(PlateListing listing, User buyer)
     {
-        var price = finalPrice ?? listing.Price;
-        return new Order(listing, buyer, price);
+        return new Order(listing, buyer);
     }
     public void MarkCompleted()
     {
