@@ -76,7 +76,7 @@ namespace SmartPlate.Services.PlateListingService
             if (listing is null)
                 throw new KeyNotFoundException($"Listing with ID {listingId} not found.");
 
-            // --- Apply changes only if values differ (optional optimization) ---
+            //  Apply changes only if values differ 
             if (listing.Price != dto.Price)
                 listing.UpdatePrice(dto.Price);
 
@@ -109,5 +109,69 @@ namespace SmartPlate.Services.PlateListingService
             return listing.ToDto();
         }
 
+        public async Task<IEnumerable<PlateListingResponseDto>> GetFilteredAsync(PlateListingFilterDto filter)
+        {
+            var query = _context.PlateListings
+                .Include(l => l.Plate)
+                .Include(l => l.Seller)
+                .AsQueryable();
+
+            // Text search partial
+            if (!string.IsNullOrWhiteSpace(filter.Search))
+            {
+                var text = filter.Search.ToLower();
+                query = query.Where(l => l.Plate.RegistrationNumber.ToLower().Contains(text));
+            }
+
+            // Listing filters
+            if (filter.IsAuction.HasValue)
+                query = query.Where(l => l.IsAuction == filter.IsAuction);
+
+
+            if (filter.MinPrice.HasValue)
+                query = query.Where(l => l.Price >= filter.MinPrice);
+
+            if (filter.MaxPrice.HasValue)
+                query = query.Where(l => l.Price <= filter.MaxPrice);
+
+            // Plate filters
+            if (filter.Type.HasValue)
+                query = query.Where(l => l.Plate.Type == filter.Type);
+
+            if (!string.IsNullOrWhiteSpace(filter.Region))
+                query = query.Where(l => l.Plate.Region == filter.Region);
+
+            if (filter.YearIssued.HasValue)
+                query = query.Where(l => l.Plate.YearIssued == filter.YearIssued);
+
+            if (filter.IsAssigned.HasValue)
+                query = query.Where(l => l.Plate.IsAssigned == filter.IsAssigned);
+
+            if (filter.CanApplyToAnyVehicle.HasValue)
+                query = query.Where(l => l.Plate.CanApplyToAnyVehicle == filter.CanApplyToAnyVehicle);
+
+            if (filter.AvailableAsCertificate.HasValue)
+                query = query.Where(l => l.Plate.AvailableAsCertificate == filter.AvailableAsCertificate);
+
+            if (filter.Supply.HasValue)
+                query = query.Where(l => l.Plate.Supply == filter.Supply);
+
+
+            var result = await query
+                .OrderByDescending(l => l.DateListed)
+                .ToListAsync();
+
+            // Categories
+            if (filter.Categories is { Count: > 0 })
+            {
+                result = result
+                    .Where(l => l.Plate.Categories.Any(c => filter.Categories.Contains(c)))
+                    .ToList();
+            }
+
+
+
+            return result.Select(x => x.ToDto());
+        }
     }
 }

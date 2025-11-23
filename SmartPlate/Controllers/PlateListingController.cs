@@ -25,10 +25,21 @@ namespace SmartPlate.Controllers
 
         [HttpGet]
         public async Task<ActionResult<List<PlateListingResponseDto>>> GetAll()
-            => Ok(await _service.GetListingsAsync());
+        {
+            return Ok(await _service.GetListingsAsync());
+        }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
-            => await _service.DeleteAsync(id) ? NoContent() : NotFound();
+        {
+            return await _service.DeleteAsync(id) ? NoContent() : NotFound();
+        }
+
+        [HttpGet("filter")]
+        public async Task<IActionResult> Filter([FromQuery] PlateListingFilterDto filter)
+        {
+            var listings = await _service.GetFilteredAsync(filter);
+            return Ok(listings);
+        }
     }
 }

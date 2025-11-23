@@ -11,5 +11,6 @@ namespace SmartPlate.Services.PlateListingService
         Task<List<PlateListingResponseDto>> GetListingsAsync();
         Task<PlateListingResponseDto> UpdateAsync(Guid listingId, PlateListingUpdateDto dto);
         Task<bool> DeleteAsync(Guid id);
+        Task<IEnumerable<PlateListingResponseDto>> GetFilteredAsync(PlateListingFilterDto filter);
     }
 }
