@@ -11,6 +11,7 @@ using SmartPlate.Helpers;
 using SmartPlate.Services.UserService;
 using SmartPlate.Services.PlateService;
 using SmartPlate.Services.PlateOwnershipService;
+using SmartPlate.Services.PlateListingService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,6 +56,7 @@ builder.Services.AddSqlite<AppDbContext>(builder.Configuration.GetConnectionStri
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPlateService, PlateService>();
 builder.Services.AddScoped<IPlateOwnershipService, PlateOwnershipService>();
+builder.Services.AddScoped<IPlateListingService, PlateListingService>();
 
 // Controllers
 builder.Services.AddControllers().AddJsonOptions(options =>
