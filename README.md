@@ -145,8 +145,8 @@ SmartPlate
 ---
 
 
-**In progress**
-- PlateBid
+### In progress
+- PlateBid module - model for it is already implemented.
 - Global exception handling with custom middleware - user module is already implemented with it and its tests already include those.
   
 ###  Planned 
@@ -178,6 +178,7 @@ SmartPlate
 ```bash
 git clone https://github.com/vladafursa/SmartPlate.git
 cd SmartPlate
+
 
 
 
