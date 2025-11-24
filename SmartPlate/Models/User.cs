@@ -9,7 +9,7 @@ public class User
 {
     // Private parameterless constructor required by EF Core.
     private User() { }
-    //private constructor to prevent direct instantiation with "new"
+    // Private constructor to prevent direct instantiation with "new"
     private User(Guid id, string userName, string passwordHash, string email, string role)
     {
         Id = id;
@@ -22,7 +22,7 @@ public class User
     // // Unique identifier
     public Guid Id { get; set; }
 
-    //Publicly readable, but only settable inside this class.
+    // Publicly readable, but only settable inside this class.
     public string UserName { get; private set; } = null!;
 
     public string PasswordHash { get; private set; } = null!;
@@ -33,7 +33,7 @@ public class User
     public string Role { get; private set; } = "User";
 
 
-    // method for creating a new user instance.
+    // Method for creating a new user instance.
     public static User Create(Guid id, string userName, string passwordHash, string email, string role = "User")
     {
         return new User(id, userName, passwordHash, email, role);

@@ -9,7 +9,7 @@ public class PlateListingConfiguration : IEntityTypeConfiguration<PlateListing>
 
         builder.HasKey(pl => pl.Id);
 
-        //enum conversion
+        // Enum conversion
         builder.Property(pl => pl.Status)
                    .HasConversion<string>();
 

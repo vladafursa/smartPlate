@@ -32,7 +32,7 @@ namespace SmartPlate.Tests.UserTests
             _service = new UserService(_context, jwtOptions);
         }
 
-        //registration tests
+        // Registration tests
         [Fact]
         public async Task Register_ShouldCreateUser()
         {
@@ -95,7 +95,7 @@ namespace SmartPlate.Tests.UserTests
             Assert.NotEqual(dto.Password, userInDb!.PasswordHash);
         }
 
-        //login tests
+        // Login tests
         [Fact]
         public async Task Login_ShouldReturnUserAndToken_WhenCredentialsAreValid()
         {

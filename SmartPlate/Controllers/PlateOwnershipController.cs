@@ -16,6 +16,7 @@ namespace SmartPlate.Controllers
             _service = service;
         }
 
+        // All ownership records for a specific plate
         [HttpGet("plate/{plateId}")]
         public async Task<ActionResult<List<PlateOwnershipResponseDto>>> GetAllOwnershipHistoryForPlateAsync(Guid plateId)
         {
@@ -23,6 +24,7 @@ namespace SmartPlate.Controllers
             return Ok(records);
         }
 
+        // All ownership records for a specific user
         [HttpGet("user/{userId}")]
         public async Task<ActionResult<List<PlateOwnershipResponseDto>>> GetAllOwnershipHistoryForUserAsync(Guid userId)
         {
@@ -30,7 +32,7 @@ namespace SmartPlate.Controllers
             return Ok(records);
         }
 
-
+        // Creation of ownership record by currently logged in user
         [HttpPost("{plateId}")]
         public async Task<ActionResult<PlateOwnershipResponseDto>> Create(Guid plateId)
         {
@@ -39,6 +41,7 @@ namespace SmartPlate.Controllers
             return Ok(record);
         }
 
+        // Active ownership for specific user
         [HttpGet("user/{userId:guid}/current")]
         public async Task<ActionResult<List<PlateOwnershipResponseDto>>> GetCurrentForUser()
         {
@@ -47,6 +50,7 @@ namespace SmartPlate.Controllers
             return Ok(result);
         }
 
+        // Active ownership for specific plate
         [HttpGet("plate/{plateId:guid}/current")]
         public async Task<ActionResult<PlateOwnershipResponseDto?>> GetCurrentForPlate(Guid plateId)
         {
@@ -58,6 +62,7 @@ namespace SmartPlate.Controllers
             return Ok(result);
         }
 
+        // Transfer owneship to a new owner
         [HttpPost("plate/{plateId:guid}/transfer/{newOwnerId:guid}")]
         public async Task<ActionResult<PlateOwnershipResponseDto>> TransferOwnership(Guid plateId, Guid newOwnerId)
         {
@@ -65,6 +70,7 @@ namespace SmartPlate.Controllers
             return Ok(result);
         }
 
+        // end of ownership
         [HttpPut("plate/{plateId:guid}/end")]
         public async Task<ActionResult<PlateOwnershipResponseDto?>> EndOwnership(Guid plateId)
         {
@@ -76,6 +82,7 @@ namespace SmartPlate.Controllers
             return Ok(result);
         }
 
+        // Deletion of the whole ownership histpry for a specific plate
         [HttpDelete("plate/{plateId:guid}")]
         public async Task<IActionResult> DeleteOwnershipRecords(Guid plateId)
         {

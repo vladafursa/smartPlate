@@ -10,7 +10,7 @@ public class PlateConfiguration : IEntityTypeConfiguration<Plate>
         builder.HasKey(u => u.Id);
 
         builder.HasIndex(u => u.RegistrationNumber).IsUnique();
-        //conversion of enums
+        // Conversion of enums
         builder.Property(p => p.Type)
                    .HasConversion<string>();
 

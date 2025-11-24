@@ -16,7 +16,7 @@ namespace SmartPlate.Models
             Owner = owner ?? throw new ArgumentNullException(nameof(owner));
             OwnerId = owner.Id;
             Start = start;
-            End = null; // ownership starts as active
+            End = null; // Ownership starts as active
         }
 
         public Guid Id { get; private set; }

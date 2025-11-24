@@ -27,25 +27,25 @@ public class Order
 
     public decimal FinalPrice { get; private set; }
 
-    // seller reference 
+    // Seller reference 
     public Guid SellerId { get; private set; }
     public User Seller { get; private set; } = null!;
 
-    // buyer reference
+    // Buyer reference
     public Guid BuyerId { get; private set; }
     public User Buyer { get; private set; } = null!;
 
-    // listing purchased
+    // Listing purchased
     public Guid PlateListingId { get; private set; }
     public PlateListing PlateListing { get; private set; } = null!;
 
-    // lifecycle state
+    // Lifecycle state
     public OrderStatus Status { get; private set; }
 
-    // timestamp of purchase creation
+    // Timestamp of purchase creation
     public DateTime CreatedAt { get; private set; }
 
-    // factory method to enforce valid creation
+    // Factory method to enforce valid creation
     public static Order Create(PlateListing listing, User buyer)
     {
         return new Order(listing, buyer);

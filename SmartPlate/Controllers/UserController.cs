@@ -16,7 +16,7 @@ namespace SmartPlate.Controllers
             _userService = userService;
         }
 
-        // register
+        // Register
         [HttpPost("register")]
         public async Task<IActionResult> Register(UserRegisterDto dto)
         {
@@ -24,7 +24,7 @@ namespace SmartPlate.Controllers
             return Ok(result);
         }
 
-        // login
+        // Login
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserLoginDto dto)
         {
@@ -41,12 +41,12 @@ namespace SmartPlate.Controllers
             return Ok(new { user, token });
         }
 
-        //logout
-        [Authorize]// user must be authenticated
+        // Logout
+        [Authorize]// User must be authenticated
         [HttpPost("logout")]
         public IActionResult Logout()
         {
-            // delete the JWT cookie to log the user out
+            // Delete the JWT cookie to log the user out
             Response.Cookies.Delete("jwt", new CookieOptions
             {
                 HttpOnly = true,
@@ -57,6 +57,7 @@ namespace SmartPlate.Controllers
             return Ok(new { message = "Logged out successfully." });
         }
 
+        // Admin's feature to see all users
         [Authorize(Roles = "Admin")]
         [HttpGet("users")]
         public async Task<IActionResult> GetAllUsers()

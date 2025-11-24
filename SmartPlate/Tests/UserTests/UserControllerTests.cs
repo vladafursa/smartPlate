@@ -82,7 +82,7 @@ namespace SmartPlate.Tests.UserTests
             Assert.Equal("User already exists", exception.Message);
         }
 
-        //login tests
+        // Login tests
         [Fact]
         public async Task Login_ShouldReturnOk_WhenCredentialsAreValid()
         {
