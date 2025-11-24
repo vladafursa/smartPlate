@@ -13,7 +13,7 @@ This version is intentionally built as a **modular monolith** to allow fast deve
 - User registration & login  
 - JWT-based authentication  
 - Role-based authorisation (**Admin**, **User**)
-- Unit tests for controllers and services 
+- Unit tests for controllers and services
 
 ###  Plates Management
 - CRUD operations  
@@ -60,6 +60,8 @@ SmartPlate
 │ └── AppDbContext.cs # Main EF Core DbContext
 │
 ├── Helpers/ # Utility classes and helpers
+| ├── Custom Exceptions.cs # Middleware for exceptions
+| ├── ExceptionMiddleware.cs # Middleware for exceptions
 │ ├── JsonDateTimeConverter.cs # Custom JSON DateTime serialisation
 │ └── JwtSettings.cs # JWT configuration settings
 │
@@ -142,10 +144,12 @@ SmartPlate
 
 ---
 
-###  Planned / Next Steps
-**Future modules**
--PlateBid
 
+**In progress**
+- PlateBid
+- Global exception handling with custom middleware - user module is already implemented with it and its tests already include those.
+  
+###  Planned 
 **Database & Infrastructure**
 - Migrate from SQLite → SQL Server (Azure SQL or Developer Edition)  
 - Full enterprise-level database capabilities with T-SQL, stored procedures, and server-side pagination  
@@ -174,6 +178,7 @@ SmartPlate
 ```bash
 git clone https://github.com/vladafursa/SmartPlate.git
 cd SmartPlate
+
 
 
 
