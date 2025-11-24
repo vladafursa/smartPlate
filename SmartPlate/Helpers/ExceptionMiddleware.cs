@@ -4,7 +4,7 @@ namespace SmartPlate.Helpers
     public class ExceptionMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly ILogger<ExceptionMiddleware> _logger;
+        private readonly ILogger<ExceptionMiddleware> _logger; // Logger to record exceptions
 
         public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger)
         {
@@ -16,18 +16,22 @@ namespace SmartPlate.Helpers
         {
             try
             {
+                // Attempt to pass the request to the next middleware
                 await _next(context);
             }
+            // If an exception occurs, handle it 
             catch (Exception ex)
             {
                 await HandleExceptionAsync(context, ex);
             }
         }
 
+        // Handling of the exception and forming a proper HTTP response
         private Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             _logger.LogError(exception, "Unhandled exception");
 
+            // Determine HTTP status code and message based on exception type
             var (status, message) = exception switch
             {
                 UserNotFoundException => (404, exception.Message),
@@ -43,5 +47,4 @@ namespace SmartPlate.Helpers
             return context.Response.WriteAsJsonAsync(new { error = message });
         }
     }
-
 }
