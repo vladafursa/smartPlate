@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using SmartPlate.Controllers;
 using SmartPlate.DTOs.User;
 using SmartPlate.Models;
+using SmartPlate.Helpers;
 using SmartPlate.Services.UserService;
 
 
@@ -59,7 +60,7 @@ namespace SmartPlate.Tests.UserTests
         }
 
         [Fact]
-        public async Task Register_ShouldReturnBadRequest_WhenUserIsNull()
+        public async Task Register_ShouldThrowException_WhenUserAlreadyExists()
         {
             // Arrange
             var dto = new UserRegisterDto
@@ -72,14 +73,13 @@ namespace SmartPlate.Tests.UserTests
 
             _userServiceMock
                 .Setup(s => s.RegisterAsync(dto))
-                .ReturnsAsync((UserResponseDto)null);
+                .ThrowsAsync(new ArgumentException("User already exists"));
 
             // Act
-            var result = await _userController.Register(dto);
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => _userController.Register(dto));
 
             // Assert
-            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-            Assert.Equal("Username or Email already exists.", badRequestResult.Value);
+            Assert.Equal("User already exists", exception.Message);
         }
 
         //login tests
@@ -101,89 +101,55 @@ namespace SmartPlate.Tests.UserTests
                 HttpContext = httpContext
             };
 
-            // Act
             var result = await _userController.Login(dto);
 
-            // Assert
+            // Act
             var okResult = Assert.IsType<OkObjectResult>(result);
-            var returnedUser = Assert.IsType<UserResponseDto>(okResult.Value);
+            var value = okResult.Value;
+
+            var userProp = value.GetType().GetProperty("user");
+            var tokenProp = value.GetType().GetProperty("token");
+
+            var returnedUser = (UserResponseDto)userProp!.GetValue(value)!;
+            var returnedToken = (string)tokenProp!.GetValue(value)!;
+
+            // Assert
             Assert.Equal("test", returnedUser.UserName);
-            //Cookie check
-            Assert.Contains("jwt=", httpContext.Response.Headers["Set-Cookie"].ToString());
+            Assert.Equal("fake-jwt-token", returnedToken);
         }
 
         [Fact]
-        public async Task Login_ShouldReturnUnauthorized_WhenTokenIsNull()
+        public async Task Login_ShouldThrowUnauthorizedException_WhenUserDoesntExist()
         {
             // Arrange
-            var dto = new UserLoginDto { Email = "test@test.com", Password = "password" };
-            var userResponse = new UserResponseDto { UserName = "test", Email = "test@test.com", Role = "User" };
+            var dto = new UserLoginDto { Email = "nonexistent@test.com", Password = "password" };
 
             _userServiceMock
                 .Setup(s => s.LoginAsync(dto))
-                .ReturnsAsync((userResponse, null));
+                .ThrowsAsync(new UserNotFoundException());
 
-            var httpContext = new DefaultHttpContext();
-            _userController.ControllerContext = new ControllerContext
-            {
-                HttpContext = httpContext
-            };
+            // Act 
+            var exception = await Assert.ThrowsAsync<UserNotFoundException>(() => _userController.Login(dto));
 
-            // Act
-            var result = await _userController.Login(dto);
-
-            // Assert
-            var unauthorizedResult = Assert.IsType<UnauthorizedObjectResult>(result);
-            Assert.Equal("Invalid credentials.", unauthorizedResult.Value);
+            //Assert
+            Assert.Equal("User not found.", exception.Message);
         }
 
         [Fact]
-        public async Task Login_ShouldReturnUnauthorized_WhenTokenAndUserIsNull()
+        public async Task Login_ShouldThrowUnauthorizedException_WhenPasswordIsInvalid()
         {
             // Arrange
-            var dto = new UserLoginDto { Email = "test@test.com", Password = "password" };
+            var dto = new UserLoginDto { Email = "yser@test.com", Password = "invalid" };
 
             _userServiceMock
                 .Setup(s => s.LoginAsync(dto))
-                .ReturnsAsync((null, null));
+                .ThrowsAsync(new InvalidPasswordException());
 
-            var httpContext = new DefaultHttpContext();
-            _userController.ControllerContext = new ControllerContext
-            {
-                HttpContext = httpContext
-            };
+            // Act 
+            var exception = await Assert.ThrowsAsync<InvalidPasswordException>(() => _userController.Login(dto));
 
-            // Act
-            var result = await _userController.Login(dto);
-
-            // Assert
-            var unauthorizedResult = Assert.IsType<UnauthorizedObjectResult>(result);
-            Assert.Equal("Invalid credentials.", unauthorizedResult.Value);
-        }
-
-        [Fact]
-        public async Task Login_ShouldReturnOk_WhenUserIsNull()
-        {
-            // Arrange
-            var dto = new UserLoginDto { Email = "test@test.com", Password = "password" };
-            var token = "fake-jwt-token";
-
-            _userServiceMock
-                .Setup(s => s.LoginAsync(dto))
-                .ReturnsAsync((null, token));
-
-            var httpContext = new DefaultHttpContext();
-            _userController.ControllerContext = new ControllerContext
-            {
-                HttpContext = httpContext
-            };
-
-            // Act
-            var result = await _userController.Login(dto);
-
-            // Assert
-            var unauthorizedResult = Assert.IsType<UnauthorizedObjectResult>(result);
-            Assert.Equal("Invalid credentials.", unauthorizedResult.Value);
+            //Assert
+            Assert.Equal("Invalid password.", exception.Message);
         }
 
         [Fact]
@@ -214,6 +180,35 @@ namespace SmartPlate.Tests.UserTests
             var setCookieHeader = httpContext.Response.Headers["Set-Cookie"].ToString();
             Assert.Contains("jwt=", setCookieHeader);
             Assert.Contains("expires=", setCookieHeader.ToLower());
+        }
+
+        [Fact]
+        public async Task GetAllUsers_ReturnsOkWithDtos()
+        {
+            // Arrange
+            var mockService = new Mock<IUserService>();
+            mockService.Setup(s => s.GetAllUsersAsync())
+                .ReturnsAsync(new List<UserResponseDto>
+                {
+            new UserResponseDto
+            {
+                Id = Guid.NewGuid(),
+                UserName = "admin",
+                Email = "admin@test.com",
+                Role = "Admin"
+            }
+                });
+
+            var controller = new UserController(mockService.Object);
+
+            // Act
+            var result = await controller.GetAllUsers();
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var users = Assert.IsAssignableFrom<List<UserResponseDto>>(okResult.Value);
+            Assert.Single(users);
+            Assert.Equal("admin", users[0].UserName);
         }
 
     }

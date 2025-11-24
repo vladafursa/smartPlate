@@ -119,6 +119,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseRouting();
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

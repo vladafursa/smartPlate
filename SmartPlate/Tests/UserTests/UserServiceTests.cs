@@ -54,7 +54,7 @@ namespace SmartPlate.Tests.UserTests
         }
 
         [Fact]
-        public async Task Register_ShouldReturnNull_WhenUserAlreadyExists()
+        public async Task Register_ShouldThrowException_WhenUserAlreadyExists()
         {
             //Arrange
             var dto = new UserRegisterDto
@@ -67,11 +67,11 @@ namespace SmartPlate.Tests.UserTests
 
             //Act
             var firstUser = await _service.RegisterAsync(dto);
-            var secondUser = await _service.RegisterAsync(dto);
 
             //Assert
             Assert.NotNull(firstUser);
-            Assert.Null(secondUser);
+            var secondUser = await Assert.ThrowsAsync<UserAlreadyExistsException>(() => _service.RegisterAsync(dto));
+            Assert.Equal("User with this email or username already exists.", secondUser.Message);
         }
 
         [Fact]
@@ -126,25 +126,25 @@ namespace SmartPlate.Tests.UserTests
         }
 
         [Fact]
-        public async Task Login_ShouldReturnNull_WhenEmailDoesNotExist()
+        public async Task Login_ShouldThrowUserNotFoundException_WhenEmailDoesNotExist()
         {
-            //Arrange
+            // Arrange
             var loginDto = new UserLoginDto
             {
                 Email = "doesnotexist@example.com",
                 Password = "password123"
             };
 
-            //Act
-            var (user, token) = await _service.LoginAsync(loginDto);
+            // Act 
+            var exception = await Assert.ThrowsAsync<UserNotFoundException>(() => _service.LoginAsync(loginDto));
 
-            //Assert
-            Assert.Null(user);
-            Assert.Null(token);
+            // Assert
+            Assert.Equal("User not found.", exception.Message);
         }
 
+
         [Fact]
-        public async Task Login_ShouldReturnNull_WhenPasswordIsInvalid()
+        public async Task Login_ShouldThrowInvalidPasswordException_WhenPasswordIsInvalid()
         {
             // Arrange
             var registerDto = new UserRegisterDto
@@ -163,11 +163,11 @@ namespace SmartPlate.Tests.UserTests
 
             // Act
             await _service.RegisterAsync(registerDto);
-            var (user, token) = await _service.LoginAsync(loginDto);
 
-            // Assert
-            Assert.Null(user);
-            Assert.Null(token);
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<InvalidPasswordException>(() => _service.LoginAsync(loginDto));
+
+            Assert.Equal("Invalid password.", exception.Message);
         }
 
         [Fact]

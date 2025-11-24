@@ -22,7 +22,7 @@ namespace SmartPlate.Services.UserService
         public UserService(AppDbContext context, IOptions<JwtSettings> jwtOptions)
         {
             _context = context;
-            _jwt = jwtOptions.Value; // Get JwtSettings values from IOptions
+            _jwt = jwtOptions.Value; // Get JwtSettings values 
         }
 
         // User registration
@@ -30,16 +30,16 @@ namespace SmartPlate.Services.UserService
         {
             // Check if a user with the same username or email already exists
             if (await _context.Users.AnyAsync(u => u.UserName == dto.Name || u.Email == dto.Email))
-                return null;
+                throw new UserAlreadyExistsException();
 
             string hashedPassword = HashPassword(dto.Password);
 
             var user = User.Create(Guid.NewGuid(), dto.Name, hashedPassword, dto.Email, dto.Role);
 
-            // Add the user to the context and save changes to the database
+            // Add and save changes to the database
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
-            // Return a DTO with user info (without password)
+
             return new UserResponseDto
             {
                 Id = user.Id,
@@ -53,12 +53,12 @@ namespace SmartPlate.Services.UserService
         public async Task<(UserResponseDto? user, string? token)> LoginAsync(UserLoginDto dto)
         {
             // Find the user by email
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
-            if (user == null) return (null, null);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == dto.Email)
+            ?? throw new UserNotFoundException();
 
             // Verify the password
             bool isValidPassword = Verify(dto.Password, user.PasswordHash);
-            if (!isValidPassword) return (null, null);
+            if (!isValidPassword) throw new InvalidPasswordException();
 
             var token = GenerateJwtToken(user);
 
