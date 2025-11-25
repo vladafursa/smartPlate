@@ -117,18 +117,7 @@ SmartPlate
 ├── SmartPlate.http 
 └── SmartPlate.sln
 ```
-### Explanation
-- **Controllers:** Handle API endpoints and HTTP requests.
-- **DTOs:** Encapsulate data to transfer between client and server.
-- **Data:** EF Core DbContext and entity configurations for database mapping.
-- **Helpers:** Utility classes like JWT config or custom JSON converters.
-- **Mappers:** Convert between domain models and DTOs for clean separation.
-- **Models:** Core domain entities and enums representing the database schema.
-- **Properties:** Project-specific settings, including launch configs.
-- **Services:** Business logic layer separated by domain (User, Plate, Orders, etc.).
-- **Tests:** Unit and integration tests for controllers and services.
-- **Database files:** SQLite files for development/testing.
-- **Program.cs & project files:** Entry point and project/solution configuration.
+
 
 ##  Tech Stack
 
@@ -178,6 +167,7 @@ SmartPlate
 ```bash
 git clone https://github.com/vladafursa/SmartPlate.git
 cd SmartPlate
+
 
 
 
