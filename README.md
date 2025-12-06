@@ -4,7 +4,6 @@
 SmartPlate is a **clean, modular ASP.NET Core 9 Web API** that simulates the buying and selling of personalised number plates.  
 This version is intentionally built as a **modular monolith** to allow fast development, easy maintenance, and effortless future scaling into microservices.
 
-> Development is currently paused due to a family visit. I will resume work starting **05.12.2025**, but I am available for interviews in the meantime.
 ---
 ## Features
 
@@ -167,6 +166,7 @@ SmartPlate
 ```bash
 git clone https://github.com/vladafursa/SmartPlate.git
 cd SmartPlate
+
 
 
 
